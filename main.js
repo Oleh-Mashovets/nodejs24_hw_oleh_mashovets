@@ -1,4 +1,2 @@
-const { myLogger } = require('./utils/logger');
-
-const logger = myLogger('main:');
-logger.info('the script is running!');
+const myLogger = require('./utils/logger')('main');
+myLogger.info('the script is running!');

@@ -1,11 +1,10 @@
 function myLogger (moduleName) {
+    const done = `${moduleName}:`
     return {
-        error: (...args) => console.error(moduleName, ...args),
-        warn: (...args) => console.warn(moduleName, ...args),
-        info: (...args) => console.info(moduleName, ...args),
+        error: (...args) => console.error(done, ...args),
+        warn: (...args) => console.warn(done, ...args),
+        info: (...args) => console.info(done, ...args),
     }
 }
 
-module.exports = {
-    myLogger
-}
+module.exports = myLogger;
