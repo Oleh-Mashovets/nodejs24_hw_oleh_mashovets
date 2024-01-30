@@ -1,12 +1,8 @@
-const config = require('config');
-
 const colors = require("colors/safe");
 colors.enable();
 
-function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
+function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL = "warn") {
   const formattedModuleName = `${moduleName}:`;
-
-  const LOG_LEVEL = config.get('LOG_LEVEL') || LOG_LEVEL_ARG;
 
   const applyColors = (message, colorFunction) => {
     return COLORS_ENABLED === "1" ? colorFunction(message) : message;

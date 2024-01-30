@@ -1,5 +1,5 @@
-const config = require('config');
 require('dotenv').config();
+const config = require('config');
 
 const COLORS_ENABLED = config.get('COLORS_ENABLED');
 const LOG_LEVEL = config.get('LOG_LEVEL');
