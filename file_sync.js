@@ -24,6 +24,7 @@ async function copyFiles(sourcePath, targetPath) {
                         logger.warn(`File already exists in target: ${sourceFilePath}`);
                     } else {
                         await fs.copyFile(sourceFilePath, targetFilePath);
+                        // await fs.copyFile(undefinedVariable, targetFilePath); //create error
                         logger.info(`Copying was successful: ${sourceFilePath}`);
                     }
                 }
