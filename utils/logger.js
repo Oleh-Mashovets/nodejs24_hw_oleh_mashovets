@@ -8,9 +8,8 @@ colors.enable();
 const LOG_FOLDER = 'logs';
 
 function createLogFolder() {
-  const folderPath = './logs';
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath);
+  if (!fs.existsSync(LOG_FOLDER)) {
+    fs.mkdirSync(LOG_FOLDER);
   }
 }
 
@@ -29,7 +28,7 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
     const logEntry = `[${new Date().toISOString()}] ${moduleName} ${level.toUpperCase()}: ${message}\n`;
     if (level === 'info') {
       infoLogStream.write(logEntry);
-    } else if (level === 'warn' || level === 'error') {
+    } else {
       errorLogStream.write(logEntry);
     }
   }
@@ -52,8 +51,6 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
       const message = applyColors(formattedModuleName, colors.bgCyan) + args.join(' ');
       if (LOG_LEVEL === "info") {
         console.log(message);
-      } else if (LOG_LEVEL === "warn") {
-        
       }
       logToFile('info', message);
     },
@@ -61,8 +58,6 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
       const message = applyColors(formattedModuleName, colors.bgYellow) + args.join(' ');
       if (LOG_LEVEL === "warn") {
         console.warn(message);
-      } else if (LOG_LEVEL === "info") {
-        
       }
       logToFile('warn', message);
     }
