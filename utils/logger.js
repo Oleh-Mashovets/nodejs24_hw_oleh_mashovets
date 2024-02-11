@@ -1,25 +1,28 @@
 const config = require('config');
 const fs = require('fs');
+const path = require('path');
 
 const colors = require("colors/safe");
 colors.enable();
 
-function createFolder() {
+const LOG_FOLDER = 'logs';
+
+function createLogFolder() {
   const folderPath = './logs';
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath);
   }
 }
 
-function createStream() {
-  createFolder();
-  const infoLogStream = fs.createWriteStream('./logs/info.log', { flags: 'a' });
-  const errorLogStream = fs.createWriteStream('./logs/errors.log', { flags: 'a' });
+function createLogStreams() {
+  const infoLogStream = fs.createWriteStream(path.join(LOG_FOLDER, 'info.log'), { flags: 'a' });
+  const errorLogStream = fs.createWriteStream(path.join(LOG_FOLDER, 'errors.log'), { flags: 'a' });
   return { infoLogStream, errorLogStream };
 }
 
 function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
-  const { infoLogStream, errorLogStream } = createStream();
+  createLogFolder();
+  const { infoLogStream, errorLogStream } = createLogStreams();
   const formattedModuleName = `${moduleName}:`;
 
   function logToFile(level, message) {
