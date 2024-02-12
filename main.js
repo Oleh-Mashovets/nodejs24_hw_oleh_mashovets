@@ -21,3 +21,5 @@ fs.writeFileSync('./target/file_2', "First string");
 
 fs.mkdirSync('./source/dir_1', {recursive: true});
 fs.writeFileSync('./source/dir_1/file_3', "First string");
+
+
