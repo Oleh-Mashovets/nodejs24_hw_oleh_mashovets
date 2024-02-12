@@ -22,8 +22,12 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
   const { infoLogStream, errorLogStream } = createStream();
   const formattedModuleName = `${moduleName}:`;
 
+  function removeBinary(message) {
+    return message.replace(/\x1B\[\d+m/g,'');
+  }
+
   function logToFile(level, message) {
-    const logEntry = `[${new Date().toISOString()}] ${moduleName} ${level.toUpperCase()}: ${message}\n`;
+    const logEntry = `[${new Date().toISOString()}] ${moduleName} ${level.toUpperCase()}: ${removeBinary(message)}\n`;
     if (level === 'info') {
       infoLogStream.write(logEntry);
     } else if (level === 'warn' || level === 'error') {
@@ -49,8 +53,6 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
       const message = applyColors(formattedModuleName, colors.bgCyan) + args.join(' ');
       if (LOG_LEVEL === "info") {
         console.log(message);
-      } else if (LOG_LEVEL === "warn") {
-        
       }
       logToFile('info', message);
     },
@@ -58,8 +60,6 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
       const message = applyColors(formattedModuleName, colors.bgYellow) + args.join(' ');
       if (LOG_LEVEL === "warn") {
         console.warn(message);
-      } else if (LOG_LEVEL === "info") {
-        
       }
       logToFile('warn', message);
     }
