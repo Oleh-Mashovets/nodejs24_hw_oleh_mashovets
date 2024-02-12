@@ -1,38 +1,32 @@
 const config = require('config');
 const fs = require('fs');
-const path = require('path');
 
 const colors = require("colors/safe");
 colors.enable();
 
-const LOG_FOLDER = 'logs';
-
-function createLogFolder() {
-  if (!fs.existsSync(LOG_FOLDER)) {
-    fs.mkdirSync(LOG_FOLDER);
+function createFolder() {
+  const folderPath = './logs';
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath);
   }
 }
 
-function createLogStreams() {
-  const infoLogStream = fs.createWriteStream(path.join(LOG_FOLDER, 'info.log'), { flags: 'a' });
-  const errorLogStream = fs.createWriteStream(path.join(LOG_FOLDER, 'errors.log'), { flags: 'a' });
+function createStream() {
+  createFolder();
+  const infoLogStream = fs.createWriteStream('./logs/info.log', { flags: 'a' });
+  const errorLogStream = fs.createWriteStream('./logs/errors.log', { flags: 'a' });
   return { infoLogStream, errorLogStream };
 }
 
 function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
-  createLogFolder();
-  const { infoLogStream, errorLogStream } = createLogStreams();
+  const { infoLogStream, errorLogStream } = createStream();
   const formattedModuleName = `${moduleName}:`;
 
-  function removeBinary(message) {
-    return message.replace(/\x1B\[\d+m/g,'');
-  }
-
-  function logToFile(level, message) {
-    const logEntry = `[${new Date().toISOString()}] ${moduleName} ${level.toUpperCase()}: ${removeBinary(message)}\n`;
+  function logToFile(level, args) {
+    const logEntry = `[${new Date().toISOString()}] ${moduleName} ${level.toUpperCase()}: ${args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ')}\n`;
     if (level === 'info') {
       infoLogStream.write(logEntry);
-    } else {
+    } else if (level === 'warn' || level === 'error') {
       errorLogStream.write(logEntry);
     }
   }
@@ -49,21 +43,21 @@ function logger(moduleName, COLORS_ENABLED = "0", LOG_LEVEL_ARG = "warn") {
       if (LOG_LEVEL === "error") {
         console.error(message);
       }
-      logToFile('error', message);
+      logToFile('error', args);
     },
     info: (...args) => {
       const message = applyColors(formattedModuleName, colors.bgCyan) + args.join(' ');
       if (LOG_LEVEL === "info") {
         console.log(message);
       }
-      logToFile('info', message);
+      logToFile('info', args);
     },
     warn: (...args) => {
       const message = applyColors(formattedModuleName, colors.bgYellow) + args.join(' ');
       if (LOG_LEVEL === "warn") {
         console.warn(message);
       }
-      logToFile('warn', message);
+      logToFile('warn', args);
     }
   };
 }
