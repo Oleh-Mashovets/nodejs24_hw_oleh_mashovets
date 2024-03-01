@@ -1,11 +1,13 @@
+//! підключаєм конфіг по назві пакеджа, а не по конкретному файлу :)
+//! ну, і про структуру свого конфіга теж не забуваєм )
+const { server } = require('config');
+
 const knexLib = require('knex');
 const knexConfig = require('./knexfile');
 const knex = knexLib(knexConfig);
 
 const express = require('express');
 const app = express();
-// const { port: PORT } = require('./config/default');
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -73,6 +75,6 @@ function validateUserData(req, resp, next) {
   next();
 }
 
-app.listen(PORT, () => {
-  console.log('Server is running on port', PORT);
+app.listen(server.port, () => {
+  console.log('Server is running on port', server.port);
 });
